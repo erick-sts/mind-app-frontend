@@ -8,28 +8,28 @@ const FormCadastro = ({ navigation }) => {
     const [email, setEmail] = useState('');
 
     const handleCadastro = async () => {
-    try {
-        const response = await fetch('http://localhost:4200/cadastro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const response = await fetch('http://localhost:4200/cadastro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const responseData = await response.json();
+            const responseData = await response.json();
 
-        if (response.ok) {
-            navigation.navigate('login');
-        } else {
-            // Tratar erro de cadastro
-            alert(`Erro de cadastro: ${responseData.message}`);
+            if (response.ok) {
+                navigation.navigate('login');
+            } else {
+              
+                alert(`Erro de cadastro: ${responseData.message}`);
+            }
+        } catch (error) {
+            console.error('Erro ao realizar cadastro:', error);
+            alert('Erro ao realizar cadastro. Por favor, tente novamente.');
         }
-    } catch (error) {
-        console.error('Erro ao realizar cadastro:', error);
-        alert('Erro ao realizar cadastro. Por favor, tente novamente.');
-    }
-};
+    };
 
 
     return (

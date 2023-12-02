@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Platform, View, Text, TouchableOpacity, FlatList, StyleSheet, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { getCursos, deleteCurso } from '../../shared/service'; // Atualize o caminho conforme necessário
-
+import { getCursos, deleteCurso } from '../../shared/service'; 
 const dismissKeyboard = () => {
   // Keyboard.dismiss();
 };

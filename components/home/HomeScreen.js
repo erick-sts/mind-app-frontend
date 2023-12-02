@@ -47,13 +47,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 16,
-        color: 'white', // Cor do texto
+        color: 'white', 
     },
     title2: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 25,
-        color: 'white', // Cor do texto
+        color: 'white', 
     },
     button: {
         backgroundColor: '#61dafb',

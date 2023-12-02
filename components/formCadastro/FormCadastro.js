@@ -15,7 +15,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import { createCurso } from '../../shared/service'; // Atualize o caminho conforme necessário
+import { createCurso } from '../../shared/service';
 
 const FormCadastro = ({ route }) => {
   const [nomeCurso, setNomeCurso] = useState('');
@@ -25,7 +25,6 @@ const FormCadastro = ({ route }) => {
   const [imagem, setImagem] = useState(null);
 
   useEffect(() => {
-    // Solicitar permissão para acessar a galeria de imagens
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,9 +36,7 @@ const FormCadastro = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    // Se houver um ID de curso na rota, carregue os dados do curso
     if (route.params?.cursoId) {
-      // Implemente a lógica para carregar os dados do curso por ID
       const cursoId = route.params.cursoId;
       // ...
     }
@@ -68,33 +65,30 @@ const FormCadastro = ({ route }) => {
       };
 
       const formData = new FormData();
-    formData.append('imagem', {
-      uri: imagem,
-      name: 'imagem.jpg',
-      type: 'image/jpg',
-    });
+      formData.append('imagem', {
+        uri: imagem,
+        name: 'imagem.jpg',
+        type: 'image/jpg',
+      });
 
-    // Adicione outros campos ao formData conforme necessário
-    formData.append('nomeCurso', nomeCurso);
-    formData.append('professorResponsavel', professorResponsavel);
-    formData.append('categoria', categoria);
-    formData.append('descricao', descricao);
-      
+      formData.append('nomeCurso', nomeCurso);
+      formData.append('professorResponsavel', professorResponsavel);
+      formData.append('categoria', categoria);
+      formData.append('descricao', descricao);
+
       if (route.params?.cursoId) {
         const cursoId = route.params.cursoId;
       } else {
         await createCurso(novoCurso);
         await axios.post('http://localhost:4200', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         Alert.alert('Cadastro Realizado', 'O curso foi cadastrado com sucesso!');
-        
       }
     } catch (error) {
       console.error('Erro ao cadastrar curso:', error);
-      
     }
   };
 
@@ -154,7 +148,6 @@ const FormCadastro = ({ route }) => {
         </TouchableWithoutFeedback>
 
         <View>
-          {/* Botões fora do TouchableWithoutFeedback */}
           <TouchableOpacity style={styles.button} onPress={handlePickImage}>
             <Text style={styles.buttonText}>Selecionar Imagem</Text>
           </TouchableOpacity>
