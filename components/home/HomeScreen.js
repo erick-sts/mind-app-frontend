@@ -25,6 +25,8 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.navigate('login')} style={styles.button}>
                     <Text style={styles.buttonText} >Continuar</Text>
                 </TouchableOpacity>
+
+                <Text style={styles.buttonCadastro} onPress={() => navigation.navigate('cadastro-usuario')}>Clique aqui se ainda não for cadastrado!</Text>
             </View>
         </LinearGradient>
     );
@@ -63,6 +65,12 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    buttonCadastro: {
+        marginTop: 20,
+        color: 'white',
+        fontSize: 14,
         textAlign: 'center',
     }
 });

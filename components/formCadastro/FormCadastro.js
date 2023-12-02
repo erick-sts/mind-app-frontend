@@ -10,11 +10,14 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+import { createCurso } from '../../shared/service'; // Atualize o caminho conforme necessário
 
-const FormCadastro = () => {
+const FormCadastro = ({ route }) => {
   const [nomeCurso, setNomeCurso] = useState('');
   const [professorResponsavel, setProfessorResponsavel] = useState('');
   const [categoria, setCategoria] = useState('');
@@ -33,12 +36,21 @@ const FormCadastro = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    // Se houver um ID de curso na rota, carregue os dados do curso
+    if (route.params?.cursoId) {
+      // Implemente a lógica para carregar os dados do curso por ID
+      const cursoId = route.params.cursoId;
+      // ...
+    }
+  }, [route.params?.cursoId]);
+
   const handlePickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.cancelled) {
@@ -46,29 +58,60 @@ const FormCadastro = () => {
     }
   };
 
-  const handleCadastro = () => {
-    // Implemente a lógica para cadastrar o curso com as informações fornecidas
-    console.log('Nome do Curso:', nomeCurso);
-    console.log('Professor Responsável:', professorResponsavel);
-    console.log('Categoria:', categoria);
-    console.log('Descrição:', descricao);
-    console.log('Imagem:', imagem);
+  const handleCadastro = async () => {
+    try {
+      const novoCurso = {
+        nomeCurso,
+        professorResponsavel,
+        categoria,
+        descricao,
+      };
+
+      const formData = new FormData();
+    formData.append('imagem', {
+      uri: imagem,
+      name: 'imagem.jpg',
+      type: 'image/jpg',
+    });
+
+    // Adicione outros campos ao formData conforme necessário
+    formData.append('nomeCurso', nomeCurso);
+    formData.append('professorResponsavel', professorResponsavel);
+    formData.append('categoria', categoria);
+    formData.append('descricao', descricao);
+      
+      if (route.params?.cursoId) {
+        const cursoId = route.params.cursoId;
+      } else {
+        await createCurso(novoCurso);
+        await axios.post('http://localhost:4200', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+        Alert.alert('Cadastro Realizado', 'O curso foi cadastrado com sucesso!');
+        
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar curso:', error);
+      
+    }
   };
 
   const dismissKeyboard = () => {
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <LinearGradient
-        colors={['#4c669f', '#3b5998', '#192f6a']}
-        style={styles.gradient}
+    <LinearGradient
+      colors={['#4c669f', '#3b5998', '#192f6a']}
+      style={styles.gradient}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}
-        >
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
           <View>
             <Text style={styles.label}>Nome do Curso:</Text>
             <TextInput
@@ -107,17 +150,22 @@ const FormCadastro = () => {
               <Image source={{ uri: imagem }} style={styles.imagem} />
             )}
 
-            <TouchableOpacity style={styles.button} onPress={handlePickImage}>
-              <Text style={styles.buttonText}>Selecionar Imagem</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-              <Text style={styles.buttonText}>Cadastrar Curso</Text>
-            </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-      </LinearGradient>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+
+        <View>
+          {/* Botões fora do TouchableWithoutFeedback */}
+          <TouchableOpacity style={styles.button} onPress={handlePickImage}>
+            <Text style={styles.buttonText}>Selecionar Imagem</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleCadastro}>
+            <Text style={styles.buttonText}>Cadastrar Curso</Text>
+          </TouchableOpacity>
+        </View>
+
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 

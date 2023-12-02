@@ -2,16 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const FormLogin = ({navigation }) => {
-
-
-    const [email, setEmail] = useState('');
+const FormCadastro = ({ navigation }) => {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
-  
-    const handleLogin = async () => {
+    const handleCadastro = async () => {
     try {
-        const response = await fetch('http://localhost:4200/login', {
+        const response = await fetch('http://localhost:4200/cadastro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,19 +17,17 @@ const FormLogin = ({navigation }) => {
             body: JSON.stringify({ email, password }),
         });
 
+        const responseData = await response.json();
+
         if (response.ok) {
-            navigation.navigate('lista');
+            navigation.navigate('login');
         } else {
-            const errorData = await response.json();
-            if (response.status === 400 && errorData.error === 'E-mail já cadastrado') {
-                alert('E-mail já cadastrado. Por favor, use outro e-mail.');
-            } else {
-                alert(`Erro de login: ${errorData.error}`);
-            }
+            // Tratar erro de cadastro
+            alert(`Erro de cadastro: ${responseData.message}`);
         }
     } catch (error) {
-        console.error('Erro ao realizar login:', error);
-        alert('Erro ao realizar login. Por favor, tente novamente.');
+        console.error('Erro ao realizar cadastro:', error);
+        alert('Erro ao realizar cadastro. Por favor, tente novamente.');
     }
 };
 
@@ -42,11 +38,12 @@ const FormLogin = ({navigation }) => {
             style={styles.gradient}
         >
             <View style={styles.container}>
-                <Text style={styles.label}>Email:</Text>
+
+                <Text style={styles.label}>E-mail:</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => setEmail(text)}
-                    placeholder="Digite seu usuário"
+                    placeholder="Digite seu e-mail"
                     value={email}
                 />
 
@@ -59,8 +56,10 @@ const FormLogin = ({navigation }) => {
                     secureTextEntry
                 />
 
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Login</Text>
+
+
+                <TouchableOpacity style={styles.button} onPress={handleCadastro}>
+                    <Text style={styles.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
             </View>
         </LinearGradient>
@@ -105,4 +104,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FormLogin;
+export default FormCadastro;
